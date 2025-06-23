@@ -12,8 +12,8 @@ local Promise = require(ReplicatedFirst.Packages.Promise)
 local Janitor = require(ReplicatedFirst.Packages.Janitor)
 
 export type ModularState = {
-	Enter: (self: StateController) -> (),
-	Exit: (self: StateController) -> (),
+	Enter: (self: StateController, ...any) -> (),
+	Exit: (self: StateController, NewState: 'None' | any) -> (),
 }
 
 export type ChronoState = {
@@ -38,7 +38,7 @@ export type StateController = typeof(setmetatable(
 		YieldedThread: thread?,
 		
 		StateJanitor: Janitor.Janitor,
-		StateCache: {},
+		StateCache: {[any]: any},
 	},
 	{} :: ChronoState
 ))
@@ -94,17 +94,17 @@ local function OverwriteYieldedThread(self: StateController): ()
 	end
 end
 
-local function TransitionCurrentState(self: StateController): ()
+local function TransitionCurrentState(self: StateController, NewState: any): ()
 	OverwriteYieldedThread(self)
 	
 	self.StateStatus = StateStatuses.Transitioning
-	SpawnWithPromise(self.States[self.CurrentState].Enter, self):await()
+	SpawnWithPromise(self.States[self.CurrentState].Exit, self, NewState):await()
 	self.StateStatus = StateStatuses.Idle
 end
 
 local function CallCurrentState(self: StateController): ()
 	self.StateStatus = StateStatuses.Calling
-	SpawnWithPromise(self.States[self.CurrentState].Exit, self):await()
+	SpawnWithPromise(self.States[self.CurrentState].Enter, self):await()
 	self.StateStatus = StateStatuses.Idle
 	CallYieldedThread(self)
 end
@@ -123,7 +123,7 @@ end
 
 local function CloseState(self: StateController): ()
 	if (self.StateStatus ~= StateStatuses.None) and (self.StateStatus ~= StateStatuses.Idle) then
-		TransitionCurrentState(self)
+		TransitionCurrentState(self, 'None')
 	end
 	
 	CleanupState(self)
