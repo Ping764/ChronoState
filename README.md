@@ -1,6 +1,8 @@
 # ChronoState
 **A coroutine-aware, asynchronous-first state machine module for Roblox!**
 
+---
+
 ### Overview
 
 **ChronoState** is a lightweight, coroutine-safe state machine for Roblox written in **Luau**. Designed for systems like weapons, character states, or UI flows, it ensures that:
@@ -10,6 +12,8 @@
 - Coroutine yielding and cancellation are safely handled.
 - Cleanup and resource management are built-in.
 
+---
+
 ### Requirements:
 
 The module uses two external modules: Promise and Janitor.
@@ -18,6 +22,8 @@ The module uses two external modules: Promise and Janitor.
 
 Be sure to include them in your project and **change the require path** in the ChronoState module if needed!
 
+---
+
 ### Purpose
 
 ChronoState is a simple, extensible state machine that you can customize for your specific use cases. It's especially useful for gameplay systems that require:
@@ -25,6 +31,8 @@ ChronoState is a simple, extensible state machine that you can customize for you
 - Clean transitions
 - Awaitable logic
 - Resource lifecycle management
+
+---
 
 ### Contributing
 
