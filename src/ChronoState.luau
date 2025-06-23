@@ -19,7 +19,7 @@ export type ModularState = {
 export type ChronoState = {
 	__index: ChronoState,
 	
-	new: (States: {[string]: ModularState}) -> StateController,
+	new: (States: {[any]: ModularState}) -> StateController,
 	
 	ChangeState: (self: StateController, NewState: string) -> (),
 	GetCurrentState: (self: StateController) -> string,
@@ -30,10 +30,10 @@ export type ChronoState = {
 
 export type StateController = typeof(setmetatable(
 	{} :: {
-		States: {[string]: ModularState},
+		States: {[any]: ModularState},
 		
 		StateStatus: StateStatuses,
-		CurrentState: 'None' | string,
+		CurrentState: 'None' | any,
 		
 		YieldedThread: thread?,
 		
@@ -109,7 +109,7 @@ local function CallCurrentState(self: StateController): ()
 	CallYieldedThread(self)
 end
 
-local function ChangeState(self: StateController, NewState: string): ()
+local function ChangeState(self: StateController, NewState: any): ()
 	if (self.StateStatus ~= StateStatuses.None) and (self.StateStatus ~= StateStatuses.Idle) then
 		TransitionCurrentState(self)
 	end
@@ -134,7 +134,7 @@ end
 local ChronoState: ChronoState = {} :: ChronoState
 ChronoState.__index = ChronoState
 
-function ChronoState.new(States: {[string]: ModularState}): StateController
+function ChronoState.new(States: {[any]: ModularState}): StateController
 	local self: StateController = setmetatable({
 		States = States,
 		
@@ -149,7 +149,7 @@ function ChronoState.new(States: {[string]: ModularState}): StateController
 	return self
 end
 
-function ChronoState:ChangeState(NewState: string): ()
+function ChronoState:ChangeState(NewState: any): ()
 	if not self.States[NewState] then
 		return error(string.format("%s is not in the states list!", NewState))
 	end
@@ -165,7 +165,7 @@ function ChronoState:CloseState(): ()
 	task.spawn(CloseState, self)
 end
 
-function ChronoState:GetCurrentState(): string
+function ChronoState:GetCurrentState(): any
 	return self.CurrentState
 end
 
