@@ -14,7 +14,7 @@
 
 The module uses two external modules: Promise and Janitor.
  - [Janitor: https://github.com/howmanysmall/Janitor](https://github.com/howmanysmall/Janitor).
- - [Promise: https://github.com/evaera/roblox-lua-promise](https://github.com/evaera/roblox-lua-promise)
+ - [Promise: https://github.com/evaera/roblox-lua-promise](https://github.com/evaera/roblox-lua-promise).
 
 Be sure to include them in your project and **change the require path** in the ChronoState module if needed!
 
