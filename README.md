@@ -5,7 +5,7 @@
 
 ### Overview
 
-**ChronoState** is a lightweight, coroutine-safe state machine for Roblox written in **Luau**. Designed for systems like weapons, character states, or UI flows, it ensures that:
+**ChronoState** is a coroutine-safe state machine for Roblox written in **Luau**. Designed for systems like weapons, character states, or UI flows, it ensures that:
 
 - Each **state transition is awaited** before continuing.
 - States are structured as `Enter` and `Exit` functions.
