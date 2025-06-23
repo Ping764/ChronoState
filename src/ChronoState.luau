@@ -13,7 +13,7 @@ local Janitor = require(ReplicatedFirst.Packages.Janitor)
 
 export type ModularState = {
 	Enter: (self: StateController, ...any) -> (),
-	Exit: (self: StateController, NewState: 'None' | any) -> (),
+	Exit: (self: StateController) -> (),
 }
 
 export type ChronoState = {
@@ -21,7 +21,7 @@ export type ChronoState = {
 	
 	new: (States: {[any]: ModularState}) -> StateController,
 	
-	ChangeState: (self: StateController, NewState: string) -> (),
+	ChangeState: (self: StateController, NewState: string, ...any) -> (),
 	GetCurrentState: (self: StateController) -> string,
 	CloseState: (self: StateController) -> (),
 	
@@ -52,10 +52,14 @@ local StateStatuses = {
 	Transitioning = 'Transitioning' :: StateStatuses,
 }
 
+local function ErrorCallback(Error: string): string
+	return Error or 'Callback was nil'
+end
+
 local function SpawnWithPromise(Function: (...any) -> (...any), ...): Promise.Promise
 	local Args: {any} = {...}
 	return Promise.new(function(Resolve, Reject): ()
-		local Success: boolean, CallBack: any? = pcall(Function, unpack(Args))
+		local Success: boolean, CallBack: any? = xpcall(Function, ErrorCallback, unpack(Args))
 		
 		if Success then
 			Resolve(CallBack)
@@ -64,7 +68,6 @@ local function SpawnWithPromise(Function: (...any) -> (...any), ...): Promise.Pr
 		end
 	end)
 		:catch(function(Error: string): ()
-			Error = Error or 'Callback was nil'
 			warn(string.format('Catched the following error: %s', Error))
 		end)
 end
@@ -94,36 +97,36 @@ local function OverwriteYieldedThread(self: StateController): ()
 	end
 end
 
-local function TransitionCurrentState(self: StateController, NewState: any): ()
+local function TransitionCurrentState(self: StateController): ()
 	OverwriteYieldedThread(self)
 	
 	self.StateStatus = StateStatuses.Transitioning
-	SpawnWithPromise(self.States[self.CurrentState].Exit, self, NewState):await()
+	SpawnWithPromise(self.States[self.CurrentState].Exit, self):await()
 	self.StateStatus = StateStatuses.Idle
 end
 
-local function CallCurrentState(self: StateController): ()
+local function CallCurrentState(self: StateController, ...): ()
 	self.StateStatus = StateStatuses.Calling
-	SpawnWithPromise(self.States[self.CurrentState].Enter, self):await()
+	SpawnWithPromise(self.States[self.CurrentState].Enter, self, ...):await()
 	self.StateStatus = StateStatuses.Idle
 	CallYieldedThread(self)
 end
 
-local function ChangeState(self: StateController, NewState: any): ()
+local function ChangeState(self: StateController, NewState: any, ...): ()
 	if (self.StateStatus ~= StateStatuses.None) and (self.StateStatus ~= StateStatuses.Idle) then
-		TransitionCurrentState(self, NewState)
+		TransitionCurrentState(self)
 	end
 	
 	CleanupState(self)
 
 	self.CurrentState = NewState
 	
-	CallCurrentState(self)
+	CallCurrentState(self, ...)
 end
 
 local function CloseState(self: StateController): ()
 	if (self.StateStatus ~= StateStatuses.None) and (self.StateStatus ~= StateStatuses.Idle) then
-		TransitionCurrentState(self, 'None')
+		TransitionCurrentState(self)
 	end
 	
 	CleanupState(self)
@@ -149,12 +152,12 @@ function ChronoState.new(States: {[any]: ModularState}): StateController
 	return self
 end
 
-function ChronoState:ChangeState(NewState: any): ()
+function ChronoState:ChangeState(NewState: any, ...): ()
 	if not self.States[NewState] then
 		return error(string.format("%s is not in the states list!", NewState))
 	end
 	
-	task.spawn(ChangeState, self, NewState)
+	task.spawn(ChangeState, self, NewState, ...)
 end
 
 function ChronoState:CloseState(): ()
