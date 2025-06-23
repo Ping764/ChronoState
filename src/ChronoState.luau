@@ -111,7 +111,7 @@ end
 
 local function ChangeState(self: StateController, NewState: any): ()
 	if (self.StateStatus ~= StateStatuses.None) and (self.StateStatus ~= StateStatuses.Idle) then
-		TransitionCurrentState(self)
+		TransitionCurrentState(self, NewState)
 	end
 	
 	CleanupState(self)
