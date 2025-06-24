@@ -38,9 +38,9 @@ StateController:ChangeState('Idle')
 ```
 
 ### Closing a state:
-In case you want to 'Exit' the current state but you don't want to change to another state, you can use ':CloseState()' to just exit the current state.
+In case you want to 'Exit' the current state but you don't want to change to another state, you can use ':ExitState()' to just exit the current state.
 ```luau
-StateController:CloseState()
+StateController:ExitState()
 ```
 
 ### Cleanup and resource management:
@@ -79,7 +79,7 @@ local StateController = ChronoState.new({
 
 StateController:ChangeState('StateOne', 'Cool string!')
 task.wait(1)
-StateController:CloseState()
+StateController:ExitState()
 ```
 Any argument passed after 'NewState' in ```:ChangeState(NewState: any, ...any)``` will be sent to the 'Enter' method of the chosen state.
 
