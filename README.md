@@ -5,7 +5,11 @@
 
 ## API
 
-### Creating a new StateController
+### Creating a new state controller.
+For us to start using this state machine, we've first gotta create the controll and give it the necessary states.
+```luau
+local test = 'aa'
+```
 
 ---
 
