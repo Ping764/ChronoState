@@ -10,7 +10,7 @@
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local UserInputService: UserInputService = game:GetService('UserInputService')
 
-local ChronoState = require(ReplicatedStorage.Modules.Libraries.ChronoState)
+local ChronoState = require('PATH_TO_CHRONOSTATE')
 
 local TestState = ChronoState.new({
 	-- This "EquipGun" function could be implemented as a modular state.
