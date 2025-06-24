@@ -31,7 +31,7 @@ When changing states, if a state is currently executing, ChronoState will wait f
 Note that the ```:ChangeState(NewState: string, ...any)``` function is asynchronous and **does not yield**. Your code will continue running without waiting for the state change to complete.
 
 Also be aware that if you call ChangeState again while a previous state change request is still pending, the new request will overwrite the previous one.
-```
+```luau
 StateController:ChangeState('Attack')
 task.wait(1)
 StateController:ChangeState('Idle')
