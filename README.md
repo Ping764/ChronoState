@@ -28,7 +28,7 @@ Using ```ChronoState.new(StatesTable: {[any]: ModularState})``` we've now create
 ### Using and switching states:
 When changing states, if a state is currently executing, ChronoState will wait for it to reach the 'idle' status (i.e., after it completes the 'Enter' coroutine). Once idle, it will run the 'Exit' coroutine for the current state and wait for it to finish. After that, the newly requested state will begin executing its 'Enter' coroutine.
 
-Note that the ```:ChangeState(NewState: string, ...any)``` function is asynchronous and **does not yield**. Your code will continue running without waiting for the state change to complete.
+Note that the ```:ChangeState(NewState: any, ...any)``` function is asynchronous and **does not yield**. Your code will continue running without waiting for the state change to complete.
 
 Also be aware that if you call ```ChangeState``` again while a previous state change request is still pending, the new request will overwrite the previous one.
 ```luau
@@ -42,6 +42,45 @@ In case you want to 'Exit' the current state but you don't want to change to ano
 ```luau
 StateController:CloseState()
 ```
+
+### Cleanup and resource management:
+When coding the 'Enter' and 'Exit' methods in the 'ModularState', the 'StateController' provides a ```StateCache``` and ```StateJanitor``` that you can use to help you manage the Instances, Connections, Variables and more.
+(Obs: **After** exiting the state, both the ```StateCache``` and ```StateJanitor``` are cleaned, destroying any connection, or instance in the janitor, and clearing the cache.)
+```lua
+local RunService: RunService = game:GetService('RunService')
+
+local ModularState = {}
+
+function ModularState:Enter(ExampleString: string): ()
+	self.StateCache.ExampleString = ExampleString
+	self.StateCache.StartTick = tick()
+	self.StateCache.PassedHeartbeat = 0
+	self.StateJanitor:Add(RunService.Heartbeat:Connect(function(DeltaTime: number): ()
+		self.StateCache.PassedHeartbeat += DeltaTime
+	end), nil, 'Disconnect')
+end
+
+function ModularState:Exit(): ()
+	print("Cached string: " self.StateCache.ExampleString)
+	print("Time since entered state (Counting with heartbeat): ".. self.StateCache.PassedHeartbeat)
+	print("Time since entered state (Counting with tick): ".. tick() - self.StateCache.StartTick)
+end
+
+return ModularState
+```
+Note that the **cache should be only used to store variables**, while the **janitor should be used to add instances, connections, and other** things you want to destroy after the state changes.
+*(If you haven't used Janitor API before, check the "Requirements" section. The API is really easy and simple to use and understand)*
+
+To run the above modular state it would look something like this:
+```luau
+local StateController = ChronoState.new({
+	StateOne = require(script.ModularState) :: ChronoState.ModularState;
+})
+
+StateController:ChangeState('StateOne', 'Cool string!')
+StateController:CloseState()
+```
+Any argument passed after 'NewState' in ```:ChangeState(NewState: any, ...any)``` will be sent to the 'Enter' method of the chosen state.
 
 ---
 
