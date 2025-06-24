@@ -24,7 +24,7 @@ local TestState = ChronoState.new({
 			
 			-- Uses janitor to add the connection, so when it changes state the connection gets cleaned.
 			self.StateJanitor:Add(UserInputService.InputBegan:Connect(function(Input: InputObject, GameProcessedEvent: boolean): ()
-				if self.StateCache.IsUnequiping then return end
+				if self.StateCache.IsUnequipping then return end
 				if GameProcessedEvent then return end
 				if Input.KeyCode ~= Enum.KeyCode.MouseLeftButton then return end
 				
@@ -36,8 +36,8 @@ local TestState = ChronoState.new({
 		end,
 		
 		Exit = function(self: ChronoState.StateController): ()
-			self.StateCache.IsUnequiping = true
-			print('Unequiping gun: '.. self.StateCache.Gun)
+			self.StateCache.IsUnequipping = true
+			print('Unequipping gun: '.. self.StateCache.Gun)
 			
 			task.wait(1) -- Unequipping animation timeout for example.
 			
