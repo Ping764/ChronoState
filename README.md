@@ -3,7 +3,7 @@
 
 ---
 
-## API
+## Documentation
 
 ### Creating a new state controller.
 For us to start using the state machine, we have to first create the 'StateController' and pass a table with the indexed states.
