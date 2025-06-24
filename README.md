@@ -8,7 +8,14 @@
 ### Creating a new state controller.
 For us to start using this state machine, we've first gotta create the controll and give it the necessary states.
 ```luau
-local test = 'aa'
+-- Use 'ChronoState.new' to create a new state controller.
+local StateController = ChronoState.new({
+  -- Each state needs to have an 'Enter' and 'Exit' function, with the state controller as self.
+  Idle = {
+   Enter = function(self: ChronoState.StateController) print('Entered idle state.') end)
+   Exit = function(self: ChronoState.StateController) print('Leaving idle state.') end)
+  };
+})
 ```
 
 ---
