@@ -4,7 +4,6 @@
 --	ChronoState:
 --		Made by: Ping764, aka ItsPing764.
 --		Github: https://github.com/Ping764/ChronoState
-
 local Promise = require(script.Packages.Promise)
 local Janitor = require(script.Packages.Janitor)
 
@@ -20,7 +19,7 @@ export type ChronoState = {
 	
 	ChangeState: (self: StateController, NewState: string, ...any) -> (),
 	GetCurrentState: (self: StateController) -> string,
-	CloseState: (self: StateController) -> (),
+	ExitState: (self: StateController) -> (),
 	
 	Destroy: (self: StateController) -> (),
 }
@@ -121,7 +120,7 @@ local function ChangeState(self: StateController, NewState: any, ...): ()
 	CallCurrentState(self, ...)
 end
 
-local function CloseState(self: StateController): ()
+local function ExitState(self: StateController): ()
 	if (self.StateStatus ~= StateStatuses.None) and (self.StateStatus ~= StateStatuses.Idle) then
 		TransitionCurrentState(self)
 	end
@@ -157,12 +156,12 @@ function ChronoState:ChangeState(NewState: any, ...): ()
 	task.spawn(ChangeState, self, NewState, ...)
 end
 
-function ChronoState:CloseState(): ()
+function ChronoState:ExitState(): ()
 	if self.CurrentState == 'None' or self.StateStatus == StateStatuses.None then
 		return
 	end
 	
-	task.spawn(CloseState, self)
+	task.spawn(ExitState, self)
 end
 
 function ChronoState:GetCurrentState(): any
