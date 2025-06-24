@@ -23,6 +23,7 @@ local StateController = ChronoState.new({
 	};
 })
 ```
+Using ```luau ChronoState.new ```
 
 ---
 
