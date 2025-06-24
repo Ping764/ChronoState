@@ -5,11 +5,8 @@
 --		Made by: Ping764, aka ItsPing764.
 --		Github: https://github.com/Ping764/ChronoState
 
-local ReplicatedStorage = game:GetService('ReplicatedStorage')
-local ReplicatedFirst = game:GetService('ReplicatedFirst')
-
-local Promise = require(ReplicatedFirst.Packages.Promise)
-local Janitor = require(ReplicatedFirst.Packages.Janitor)
+local Promise = require(script.Packages.Promise)
+local Janitor = require(script.Packages.Janitor)
 
 export type ModularState = {
 	Enter: (self: StateController, ...any) -> (),
