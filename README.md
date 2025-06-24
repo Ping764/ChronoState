@@ -27,11 +27,11 @@ Using ```ChronoState.new(StatesTable: {[any]: ModularState})``` we've now create
 
 
 ### Switching states.
-When changing states, if a state is currently executing, ChronoState will wait for it to reach the 'idle' status (i.e., after it completes the Enter coroutine). Once idle, it will run the Exit coroutine for the current state and wait for it to finish. After that, the newly requested state will begin executing its Enter coroutine.
+When changing states, if a state is currently executing, ChronoState will wait for it to reach the 'idle' status (i.e., after it completes the 'Enter' coroutine). Once idle, it will run the 'Exit' coroutine for the current state and wait for it to finish. After that, the newly requested state will begin executing its 'Enter' coroutine.
 
 Note that the ```:ChangeState(NewState: string, ...any)``` function is asynchronous and **does not yield**. Your code will continue running without waiting for the state change to complete.
 
-Also be aware that if you call ChangeState again while a previous state change request is still pending, the new request will overwrite the previous one.
+Also be aware that if you call ```ChangeState``` again while a previous state change request is still pending, the new request will overwrite the previous one.
 ```luau
 StateController:ChangeState('Attack')
 task.wait(1)
