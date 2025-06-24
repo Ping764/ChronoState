@@ -37,7 +37,7 @@ task.wait(1)
 StateController:ChangeState('Idle')
 ```
 
-### Closing a state:
+### Exiting a state:
 In case you want to 'Exit' the current state but you don't want to change to another state, you can use ':ExitState()' to just exit the current state.
 ```luau
 StateController:ExitState()
