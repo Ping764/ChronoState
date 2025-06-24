@@ -13,7 +13,7 @@ local UserInputService: UserInputService = game:GetService('UserInputService')
 local ChronoState = require(ReplicatedFirst.Packages.ChronoState)
 
 local TestState = ChronoState.new({
-	-- This "EquipGun" function could be implemented as a modular state.
+	-- This "EquipGun" function could be implemented as a separated module.
 	-- It would look something like this:
 	-- ['EquipGun'] = require(script.States.EquipGun --[[Path to the modular state]]) :: ChronoState.ModularState;
 	['EquipGun'] = {
