@@ -7,11 +7,11 @@
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local UserInputService: UserInputService = game:GetService('UserInputService')
 
-local MachineState = require(ReplicatedStorage.Modules.Libraries.StateMachine)
+local ChronoState = require(ReplicatedStorage.Modules.Libraries.StateMachine)
 
-local TestState = MachineState.new({
+local TestState = ChronoState.new({
 	['EquipGun'] = {
-		Enter = function(self: MachineState.StateController, GunName: string): ()
+		Enter = function(self: ChronoState.StateController, GunName: string): ()
 			self.StateCache.Gun = GunName
 			self.StateCache.BulletsUsed = 0
 			
@@ -32,7 +32,7 @@ local TestState = MachineState.new({
 			print('Finished equipping the gun!')
 		end,
 		
-		Exit = function(self: MachineState.StateController): ()
+		Exit = function(self: ChronoState.StateController): ()
 			self.StateCache.IsUnequiping = true
 			print('Unequiping gun: '.. self.StateCache.Gun)
 			
