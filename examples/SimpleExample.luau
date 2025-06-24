@@ -7,10 +7,10 @@
 -- OBS:
 -- In this example, it's a single state only. But obviously in a real system more states could and should be implemented.
 
-local ReplicatedStorage = game:GetService('ReplicatedStorage')
+local ReplicatedFirst = game:GetService('ReplicatedFirst')
 local UserInputService: UserInputService = game:GetService('UserInputService')
 
-local ChronoState = require('PATH_TO_CHRONOSTATE')
+local ChronoState = require(ReplicatedFirst.Packages.ChronoState)
 
 local TestState = ChronoState.new({
 	-- This "EquipGun" function could be implemented as a modular state.
