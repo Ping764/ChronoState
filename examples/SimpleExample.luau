@@ -57,4 +57,4 @@ TestState:ChangeState('EquipGun', GunTwo) -- Equips the second gun after the fir
 
 task.wait(2)
 
-TestState:CloseState() -- Unequips the current gun
+TestState:ExitState() -- Unequips the current gun
