@@ -40,6 +40,16 @@ StateController:ChangeState('Idle')
 
 ---
 
+### Requirements:
+
+The module uses two external modules: Promise and Janitor.
+ - [Janitor: https://github.com/howmanysmall/Janitor](https://github.com/howmanysmall/Janitor).
+ - [Promise: https://github.com/evaera/roblox-lua-promise](https://github.com/evaera/roblox-lua-promise).
+
+Be sure to include them in your project and **change the require path** in the ChronoState module if needed!
+
+---
+
 ### Overview
 
 **ChronoState** is a coroutine-safe state machine for Roblox written in **Luau**. Designed for systems like weapons, character states, or UI flows, it ensures that:
@@ -48,16 +58,6 @@ StateController:ChangeState('Idle')
 - States are structured as `Enter` and `Exit` functions.
 - Coroutine yielding and cancellation are safely handled.
 - Cleanup and resource management are built-in.
-
----
-
-### Requirements:
-
-The module uses two external modules: Promise and Janitor.
- - [Janitor: https://github.com/howmanysmall/Janitor](https://github.com/howmanysmall/Janitor).
- - [Promise: https://github.com/evaera/roblox-lua-promise](https://github.com/evaera/roblox-lua-promise).
-
-Be sure to include them in your project and **change the require path** in the ChronoState module if needed!
 
 ---
 
