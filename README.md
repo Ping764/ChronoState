@@ -23,7 +23,7 @@ local StateController = ChronoState.new({
 	};
 })
 ```
-Using ```luau ChronoState.new ```
+Using ```ChronoState.new(StatesTable: {[any]: ModularState})```
 
 ---
 
