@@ -4,6 +4,9 @@
 -- IMPORTANT:
 -- THIS IS A SIMPLE EXAMPLE JUST TO SHOWCASE THE MODULE USAGE.
 
+-- OBS:
+-- In this example, it's a single state only. But obviously in a real system more states could and should be implemented.
+
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local UserInputService: UserInputService = game:GetService('UserInputService')
 
