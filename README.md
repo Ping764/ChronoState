@@ -78,6 +78,7 @@ local StateController = ChronoState.new({
 })
 
 StateController:ChangeState('StateOne', 'Cool string!')
+task.wait(1)
 StateController:CloseState()
 ```
 Any argument passed after 'NewState' in ```:ChangeState(NewState: any, ...any)``` will be sent to the 'Enter' method of the chosen state.
