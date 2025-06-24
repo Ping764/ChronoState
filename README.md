@@ -6,7 +6,7 @@
 ## API
 
 ### Creating a new state controller.
-For us to start using this state machine, we've first gotta create the controll and give it the necessary states.
+For us to start using the state machine, we have to first create the 'StateController' and pass a table with the indexed states.
 ```luau
 -- Use 'ChronoState.new' to create a new state controller.
 local StateController = ChronoState.new({
@@ -23,7 +23,7 @@ local StateController = ChronoState.new({
 	};
 })
 ```
-Using ```ChronoState.new(StatesTable: {[any]: ModularState})```
+Using ```ChronoState.new(StatesTable: {[any]: ModularState})``` we've now created a 'StateController', and when calling the indexed state we can also pass any necessary argument if needed.
 
 ---
 
