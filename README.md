@@ -5,7 +5,7 @@
 
 ## Documentation
 
-### Creating a new state controller.
+### Creating a new state controller:
 To start using the state machine, we have to first create the 'StateController' and pass a table with the indexed states.
 ```luau
 -- Use 'ChronoState.new' to create a new state controller.
@@ -25,8 +25,7 @@ local StateController = ChronoState.new({
 ```
 Using ```ChronoState.new(StatesTable: {[any]: ModularState})``` we've now created a 'StateController'. With it, it's now possible to start using the states.
 
-
-### Using and switching states.
+### Using and switching states:
 When changing states, if a state is currently executing, ChronoState will wait for it to reach the 'idle' status (i.e., after it completes the 'Enter' coroutine). Once idle, it will run the 'Exit' coroutine for the current state and wait for it to finish. After that, the newly requested state will begin executing its 'Enter' coroutine.
 
 Note that the ```:ChangeState(NewState: string, ...any)``` function is asynchronous and **does not yield**. Your code will continue running without waiting for the state change to complete.
