@@ -3,6 +3,12 @@
 
 ---
 
+## API
+
+### Creating a new StateController
+
+---
+
 ### Overview
 
 **ChronoState** is a coroutine-safe state machine for Roblox written in **Luau**. Designed for systems like weapons, character states, or UI flows, it ensures that:
