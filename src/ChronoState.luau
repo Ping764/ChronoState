@@ -4,8 +4,20 @@
 --	ChronoState:
 --		Made by: Ping764, aka ItsPing764.
 --		Github: https://github.com/Ping764/ChronoState
+
 local Promise = require(script.Packages.Promise)
 local Janitor = require(script.Packages.Janitor)
+
+local StateStatuses = {
+	None = 'None' :: StateStatuses,
+	Idle = 'Idle' :: StateStatuses,
+	Calling = 'Calling' :: StateStatuses,
+	Transitioning = 'Transitioning' :: StateStatuses,
+}
+
+local StateEnums = {
+	None = newproxy(false),
+}
 
 export type ModularState = {
 	Enter: (self: StateController, ...any) -> (),
@@ -29,7 +41,7 @@ export type StateController = typeof(setmetatable(
 		States: {[any]: ModularState},
 		
 		StateStatus: StateStatuses,
-		CurrentState: 'None' | any,
+		CurrentState: typeof(StateEnums.None) | any,
 		
 		YieldedThread: thread?,
 		
@@ -40,13 +52,6 @@ export type StateController = typeof(setmetatable(
 ))
 
 type StateStatuses = 'None' | 'Idle' | 'Calling' | 'Transitioning'
-
-local StateStatuses = {
-	None = 'None' :: StateStatuses,
-	Idle = 'Idle' :: StateStatuses,
-	Calling = 'Calling' :: StateStatuses,
-	Transitioning = 'Transitioning' :: StateStatuses,
-}
 
 local function ErrorCallback(Error: string): string
 	return Error or 'Callback was nil'
@@ -93,12 +98,19 @@ local function OverwriteYieldedThread(self: StateController): ()
 	end
 end
 
-local function TransitionCurrentState(self: StateController): ()
-	OverwriteYieldedThread(self)
-	
+local function ExitCurrentState(self: StateController): ()
 	self.StateStatus = StateStatuses.Transitioning
 	SpawnWithPromise(self.States[self.CurrentState].Exit, self):await()
 	self.StateStatus = StateStatuses.Idle
+end
+
+local function TransitionCurrentState(self: StateController): ()
+	if (self.StateStatus ~= StateStatuses.None) and (self.StateStatus ~= StateStatuses.Idle) then
+		OverwriteYieldedThread(self)
+	end
+	if self.CurrentState and (self.CurrentState ~= StateEnums.None) then
+		ExitCurrentState(self)
+	end
 end
 
 local function CallCurrentState(self: StateController, ...): ()
@@ -109,10 +121,7 @@ local function CallCurrentState(self: StateController, ...): ()
 end
 
 local function ChangeState(self: StateController, NewState: any, ...): ()
-	if (self.StateStatus ~= StateStatuses.None) and (self.StateStatus ~= StateStatuses.Idle) then
-		TransitionCurrentState(self)
-	end
-	
+	TransitionCurrentState(self)
 	CleanupState(self)
 
 	self.CurrentState = NewState
@@ -121,13 +130,11 @@ local function ChangeState(self: StateController, NewState: any, ...): ()
 end
 
 local function ExitState(self: StateController): ()
-	if (self.StateStatus ~= StateStatuses.None) and (self.StateStatus ~= StateStatuses.Idle) then
-		TransitionCurrentState(self)
-	end
-	
+	TransitionCurrentState(self)
 	CleanupState(self)
 	
 	self.StateStatus = StateStatuses.None
+	self.CurrentState = StateEnums.None
 end
 
 local ChronoState: ChronoState = {} :: ChronoState
@@ -138,7 +145,7 @@ function ChronoState.new(States: {[any]: ModularState}): StateController
 		States = States,
 		
 		StateStatus = StateStatuses.None,
-		CurrentState = 'None',
+		CurrentState = StateEnums.None,
 		
 		YieldedThread = nil,
 		
@@ -157,7 +164,7 @@ function ChronoState:ChangeState(NewState: any, ...): ()
 end
 
 function ChronoState:ExitState(): ()
-	if self.CurrentState == 'None' or self.StateStatus == StateStatuses.None then
+	if self.CurrentState == StateEnums.None or self.StateStatus == StateStatuses.None then
 		return
 	end
 	
