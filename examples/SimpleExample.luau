@@ -13,6 +13,9 @@ local UserInputService: UserInputService = game:GetService('UserInputService')
 local ChronoState = require(ReplicatedStorage.Modules.Libraries.StateMachine)
 
 local TestState = ChronoState.new({
+	-- This "EquipGun" function could be implemented as a modular state.
+	-- It would look something like this:
+	-- ['EquipGun'] = require(script.States.EquipGun --[[Path to the modular state]]) :: ChronoState.ModularState;
 	['EquipGun'] = {
 		Enter = function(self: ChronoState.StateController, GunName: string): ()
 			self.StateCache.Gun = GunName
