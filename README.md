@@ -25,6 +25,7 @@ local StateController = ChronoState.new({
 ```
 Using ```ChronoState.new(StatesTable: {[any]: ModularState})``` we've now created a 'StateController'. With it, it's now possible to start using the states.
 
+
 ### Switching states.
 When changing states, if a state is currently executing, ChronoState will wait for it to reach the 'idle' status (i.e., after it completes the Enter coroutine). Once idle, it will run the Exit coroutine for the current state and wait for it to finish. After that, the newly requested state will begin executing its Enter coroutine.
 
@@ -36,6 +37,7 @@ StateController:ChangeState('Attack')
 task.wait(1)
 StateController:ChangeState('Idle')
 ```
+
 ---
 
 ### Overview
