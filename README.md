@@ -57,7 +57,7 @@ function ModularState:Enter(ExampleString: string): ()
 	self.StateCache.PassedHeartbeat = 0
 	self.StateJanitor:Add(RunService.Heartbeat:Connect(function(DeltaTime: number): ()
 		self.StateCache.PassedHeartbeat += DeltaTime
-	end), nil, 'Disconnect')
+	end), 'Disconnect')
 end
 
 function ModularState:Exit(): ()
